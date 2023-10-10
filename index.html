@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bool Questions</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!--suppress CssUnresolvedCustomProperty -->
+    <style>
+        body {
+            color: var(--tg-theme-text-color);
+            background: var(--tg-theme-bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        .wrapper {
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 22px;
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .bigger {
+            font-size: 20px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-align: center;
+            line-height: 1.5;
+            margin-top: 7px;
+        }
+
+        h3 {
+            font-size: 16px;
+            padding-left: 20px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        textarea {
+            font-size: 18px;
+            font-weight: 600;
+            width: calc(100% - 45px);
+            min-height: 120px;
+            max-height: 120px;
+            margin-left: 20px;
+        }
+
+        .button {
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            font-size: 18px;
+        }
+
+        .button_menu:not(:last-child) {
+            margin-bottom: 10px
+        }
+
+        .button {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-radius: 5px;
+            width: calc(100% - 80px);
+        }
+
+        .button_big {
+            margin-top: 5px;
+            margin-left: 20px;
+            width: calc(100% - 40px);
+        }
+
+        .button_refresh {
+            margin-top: 5px;
+            margin-left: 20px;
+            width: calc(100% - 30px);
+        }
+
+        .buttons-block {
+            text-align: center;
+        }
+
+        .app-layout {
+            display: none;
+        }
+
+        .left {
+            text-align: left;
+            margin-left: 20px;
+        }
+
+        .under {
+            text-decoration: underline;
+        }
+
+        .yes {
+            color: #7fff00;
+            border: 1px solid var(--tg-theme-button-color);
+            border-radius: 7px;
+            padding: 7px;
+        }
+
+        .no {
+            color: red;
+            border: 1px solid var(--tg-theme-button-color);
+            border-radius: 5px;
+            padding: 7px;
+        }
+
+        .ask-question-buttons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-around;
+            width: calc(100% - 20px);
+        }
+
+        #question-was-saved {
+            margin-left: 20px;
+            width: calc(100% - 20px);
+            max-width: calc(100% - 20px);
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+        .answer-buttons-container {
+            display: flex;
+            max-width: calc(100% - 20px);
+        }
+
+        #current-question {
+            min-height: 120px;
+            max-height: 120px;
+        }
+
+        .my-answers-container--item {
+            max-width: calc(100% - 50px);
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            margin-left: 20px;
+            gap: 15px;
+        }
+
+        .my-answers-container--item-like {
+            align-self: center;
+        }
+
+        .my-statistic-container--item {
+            display: flex;
+            gap: 15px;
+            max-width: calc(100% - 50px);
+            justify-content: space-between;
+            margin-top: 5px;
+            margin-left: 20px;
+        }
+
+        .my-statistic-container--item-like {
+            align-self: center;
+            min-width: 100px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="app-layout" id="main">
+        <h1><span id="is-username"></span><span class="under" id="main-user-welcome"></span><br>Welcome to The<br><span
+                class="under">Bool</span> <span class="under">Questions</span>!</h1>
+        <h2>You can <span class="bigger">Answer</span></h2>
+        <h2 class="yes-or-no"><span class="bigger yes">Yes</span> or <span class="bigger no">No</span></h2>
+        <h2>or <span class="bigger">Ask</span> any Question!</h2>
+        <div class="buttons-block">
+            <button layout="ask" id="btn-ask" class="go button button_menu">Ask</button>
+            <!--Кнопка, чтобы скрыть / показать основную кнопку-->
+            <button layout="answer" id="btn-answer" class="go button button_menu">Answer</button>
+            <button layout="my-answers" id="btn-my-answers" class="go button button_menu">My Answers</button>
+            <button layout="my-question-statistic" id="btn-my-questions-statistic" class="go button button_menu">My
+                Questions Statistic
+            </button>
+        </div>
+    </div>
+
+    <div class="app-layout" id="ask">
+        <h2 layout="main" class="left go">← <span class="under">Ask</span></h2>
+        <h3 id="ask-question-header">Enter Your Simple Question<br>for Yes / No Answer:</h3>
+        <label>
+            <textarea id="question-textarea" type="text"></textarea>
+        </label>
+        <div id="question-was-saved"></div>
+        <div class="ask-question-buttons">
+            <button id="send-question--go-menu" layout="main" class="button button_big go" style="display: none;">Back
+                to Menu
+            </button>
+            <button id="send-question-btn" class="button button_big">Send Question</button>
+        </div>
+    </div>
+
+    <div class="app-layout" id="answer">
+        <h2 layout="main" class="left go">← <span class="under">Answer</span></h2>
+        <h3 id="current-question"></h3>
+        <div class="answer-buttons-container">
+            <button class="button button_big" id="answer-no" style="display: none;">
+                👎 No
+            </button>
+            <button class="button button_big" id="answer-yes" style="display: none;">
+                Yes 👍
+            </button>
+            <button class="button button_big button_refresh" id="answer-refresh" style="display: none;">
+                No New Questions. Refresh.
+            </button>
+        </div>
+    </div>
+
+    <div class="app-layout" id="my-answers">
+        <h2 layout="main" class="left go">← <span class="under">My Answers</span></h2>
+        <div id="my-answers-container"></div>
+    </div>
+
+    <div class="app-layout" id="my-question-statistic">
+        <h2 layout="main" class="left go">← <span class="under">My Questions Statistic</span></h2>
+        <div id="my-statistic-container"></div>
+    </div>
+</body>
+<script>
+    var backend = "https://bro-launcher.com";
+    var tg = window.Telegram.WebApp;
+    tg.expand();
+    let u = tg.initDataUnsafe.user;
+    let welcomeName = (u.username) || `${u.first_name} ${u.last_name}`;
+    if (u.username) {
+        document.getElementById('is-username').innerText = '@';
+    }
+    document.getElementById('main-user-welcome').innerText = welcomeName;
+    document.getElementById('main').style.display = 'block';
+    let layouts = document.getElementsByClassName('go');
+    for (let i = 0; i < layouts.length; i++) {
+        layouts[i].addEventListener('click', function (e) {
+            let goTo = e.currentTarget.getAttribute('layout')
+            let allLayouts = document.getElementsByClassName('app-layout');
+            for (let y = 0; y < allLayouts.length; y++) {
+                if (allLayouts[y].id === goTo) {
+                    allLayouts[y].style.display = 'block';
+                } else {
+                    allLayouts[y].style.display = 'none';
+                }
+            }
+            if (goTo === 'answer') {
+                getNewQuestion()
+            }
+            if (goTo === 'my-answers') {
+                getMyAnswers()
+            }
+            if (goTo === 'my-question-statistic') {
+                myQuestionStatistic()
+            }
+        });
+    }
+
+    function getNewQuestion() {
+        const xhr = new XMLHttpRequest();
+        xhr.open(
+            "GET",
+            backend + "/api?action=get-one-question&data=" + btoa(tg.initData)
+        );
+        xhr.onload = (e) => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    let resp = JSON.parse(xhr.responseText);
+                    if (resp.data.success === true) {
+                        document.getElementById('current-question').innerText = resp.data.text;
+                        document.getElementById('current-question').setAttribute('question_id', resp.data.question_id);
+                        document.getElementById('answer-no').style.display = '';
+                        document.getElementById('answer-yes').style.display = '';
+                        document.getElementById('answer-refresh').style.display = 'none';
+                        document.getElementById('current-question').style.display = '';
+                    } else {
+                        document.getElementById('answer-no').style.display = 'none';
+                        document.getElementById('answer-yes').style.display = 'none';
+                        document.getElementById('answer-refresh').style.display = '';
+                    }
+                }
+            }
+        };
+        xhr.send(null);
+    }
+
+    function getMyAnswers() {
+        const xhr = new XMLHttpRequest();
+        xhr.open(
+            "GET",
+            backend + "/api?action=get-my-answers&data=" + btoa(tg.initData)
+        );
+        xhr.onload = (e) => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    let resp = JSON.parse(xhr.responseText);
+                    if (resp.data.success === true) {
+                        let container = document.getElementById('my-answers-container');
+                        for (let i = 0; i < resp.data.questions.length; i++) {
+                            let item = document.createElement('div');
+                            item.classList.add('my-answers-container--item');
+                            let text = document.createElement('div');
+                            text.classList.add('my-answers-container--item-text');
+                            text.innerText = resp.data.questions[i].text;
+                            let like = document.createElement('div');
+                            like.classList.add('my-answers-container--item-like');
+                            like.innerText = resp.data.questions[i].yes ? '✅' : '❌';
+                            item.appendChild(text);
+                            item.appendChild(like);
+                            let hr = document.createElement('hr');
+                            container.appendChild(hr);
+                            container.appendChild(item);
+                        }
+                    }
+                }
+            }
+        };
+        xhr.onerror = (e) => {
+        };
+        xhr.send(null);
+    }
+
+    document.getElementById('send-question-btn').addEventListener('click', function (e) {
+        if (e.currentTarget.classList.contains('just-fresh')) {
+            e.currentTarget.classList.remove('just-fresh')
+            e.currentTarget.innerText = 'Send Question';
+            document.getElementById('send-question--go-menu').style.display = 'none';
+            document.getElementById('question-textarea').style.display = '';
+            document.getElementById('question-was-saved').style.display = 'none';
+            return;
+        }
+        let textareaValue = document.getElementById('question-textarea').value;
+        const xhr = new XMLHttpRequest();
+        xhr.open(
+            "GET",
+            backend + "/api?action=add-question&data=" + btoa(tg.initData) + "&question_text=" + btoa(textareaValue)
+        );
+        xhr.onload = (e) => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    let resp = JSON.parse(xhr.responseText);
+                    if (resp.data.success === true) {
+                        document.getElementById('question-was-saved').innerText = `Question "${resp.data.text}" was saved successfully!`;
+                        document.getElementById('question-was-saved').style.display = '';
+                        document.getElementById('question-textarea').value = '';
+                        document.getElementById('send-question--go-menu').style.display = '';
+                        document.getElementById('question-textarea').style.display = 'none';
+                        document.getElementById('ask-question-header').innerText = 'Your New Question:'
+                        document.getElementById('send-question-btn').innerText = 'New Question';
+                        document.getElementById('send-question-btn').classList.add('just-fresh');
+                        return;
+                    }
+                    document.getElementById('send-question-btn').innerText = 'Error. Try again.';
+                }
+            }
+        };
+        xhr.onerror = (e) => {
+        };
+        xhr.send(null);
+    });
+    document.getElementById('answer-no').addEventListener('click', function (e) {
+        sendAnswer(e);
+    })
+    document.getElementById('answer-yes').addEventListener('click', function (e) {
+        sendAnswer(e, true);
+    })
+    document.getElementById('answer-refresh').addEventListener('click', function (e) {
+        e.currentTarget.style.display = 'none';
+        getNewQuestion()
+    })
+
+    function sendAnswer(e, yes = false) {
+        document.getElementById('answer-no').style.display = 'none';
+        document.getElementById('answer-yes').style.display = 'none';
+        document.getElementById('current-question').style.display = 'none';
+        let questionId = document.getElementById('current-question').getAttribute('question_id')
+        const xhr = new XMLHttpRequest();
+        xhr.open(
+            "GET",
+            backend + "/api?action=send-answer&data=" + btoa(tg.initData) + "&question_id=" + questionId + "&answer=" + (yes ? '1' : '0')
+        );
+        xhr.onload = (e) => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    let resp = JSON.parse(xhr.responseText);
+                    if (resp.data.success === true) {
+                    }
+                    getNewQuestion();
+                }
+            }
+        };
+        xhr.onerror = () => {
+        };
+        xhr.send(null);
+    }
+
+    function myQuestionStatistic() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", backend + "/api?action=my-question-statistic&data=" + btoa(tg.initData));
+        xhr.onload = (e) => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    let resp = JSON.parse(xhr.responseText);
+                    if (resp.data.success === true) {
+                        let container = document.getElementById('my-statistic-container');
+                        for (let i = 0; i < resp.data.questions.length; i++) {
+                            let item = document.createElement('div');
+                            item.classList.add('my-statistic-container--item');
+                            let text = document.createElement('div');
+                            text.classList.add('my-statistic-container--item-text');
+                            text.innerText = resp.data.questions[i].text;
+                            let like = document.createElement('div');
+                            like.classList.add('my-statistic-container--item-like');
+                            like.innerText = '👎 ' + resp.data.questions[i].no + ' / ' + resp.data.questions[i].yes + ' 👍';
+                            item.appendChild(text);
+                            item.appendChild(like);
+                            let hr = document.createElement('hr');
+                            container.appendChild(hr);
+                            container.appendChild(item);
+
+                        }
+                    }
+                }
+            }
+        };
+        xhr.onerror = (e) => {
+        };
+        xhr.send(null);
+    }
+</script>
+</html>

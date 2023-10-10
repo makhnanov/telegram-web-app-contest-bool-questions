@@ -1,0 +1,19 @@
+{
+    "name": "makhnanov/contest",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roman Bakirov",
+            "email": "makhnanov@protonmail.com"
+        }
+    ],
+    "require": {
+        "telegram-bot/api": "^2.5",
+        "symfony/var-dumper": "^5.4",
+        "oxmohsen/validating-data": "*",
+        "predis/predis": "^2.2",
+        "illuminate/support": "^8.83",
+        "vlucas/phpdotenv": "^5.5"
+    }
+}
