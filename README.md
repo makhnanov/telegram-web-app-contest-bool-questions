@@ -2,7 +2,7 @@
 
 ![Bool Questions](https://github.com/makhnanov/telegram-web-app-contest-bool-questions/blob/main/demo_bool_questions.gif?raw=true)
 
-## Demo: [@BoolQuestions](https://t.me/BoolQuestions)
+## Demo: [@BoolQuestionsBot](https://t.me/BoolQuestionsBot)
 
 ## Stack: Vanilla JavaScript + PHP without any framework + Redis for fastest storage
 
